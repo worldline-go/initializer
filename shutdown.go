@@ -1,15 +1,17 @@
 package initializer
 
 import (
+	"context"
 	"sync"
 
 	"github.com/rs/zerolog/log"
 )
 
 type ShutdownHolder struct {
-	funcs []shutdownInfo
-	mutex sync.Mutex
+	ctxCancel context.CancelFunc
+	funcs     []shutdownInfo
 
+	mutex sync.Mutex
 	isRun bool
 }
 
@@ -18,7 +20,18 @@ type shutdownInfo struct {
 	fn   func() error
 }
 
-var Shutdown = ShutdownHolder{}
+var Shutdown ShutdownHolder
+
+// Cancel is a function that cancels the root context.
+//
+// This helps to stop the application gracefully without any errors.
+func (s *ShutdownHolder) CtxCancel() {
+	if s.ctxCancel == nil {
+		return
+	}
+
+	s.ctxCancel()
+}
 
 func (s *ShutdownHolder) Add(fn func() error, options ...OptionShutdownAdd) {
 	option := optionShutdownAdd{}

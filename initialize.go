@@ -66,6 +66,10 @@ func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit
 	wg := sync.WaitGroup{}
 	ctx, ctxCancel := context.WithCancel(context.Background())
 
+	Shutdown = ShutdownHolder{
+		ctxCancel: ctxCancel,
+	}
+
 	defer wg.Wait()
 	defer ctxCancel()
 
