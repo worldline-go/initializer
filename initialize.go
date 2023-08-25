@@ -86,6 +86,8 @@ func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit
 			SetExitCode(1, false)
 
 			log.Warn().Msg("received shutdown signal")
+
+			ctxCancel()
 		}
 
 		Shutdown.Run(WithShutdownRunOnce())

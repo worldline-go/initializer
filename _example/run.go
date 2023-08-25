@@ -6,7 +6,6 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 
 	"github.com/worldline-go/initializer"
 	"github.com/worldline-go/logz"
@@ -29,9 +28,9 @@ func main() {
 		))
 }
 
-func run(_ context.Context, _ *sync.WaitGroup) error {
+func run(ctx context.Context, _ *sync.WaitGroup) error {
 	// Do something here.
-	log.Info().Msg("Hello World!")
+	<-ctx.Done()
 
 	return fmt.Errorf("something went wrong")
 }
