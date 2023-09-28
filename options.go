@@ -1,6 +1,7 @@
 package initializer
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/worldline-go/logz"
@@ -8,6 +9,7 @@ import (
 
 type optionInit struct {
 	msg string
+	ctx context.Context //nolint:containedctx // temporary
 
 	logzOptions []logz.Option
 }
@@ -23,6 +25,13 @@ func WithMsgf(format string, a ...any) OptionInit {
 	}
 }
 
+// WithContext is a function that sets the context to be used as parent context.
+func WithContext(ctx context.Context) OptionInit {
+	return func(options *optionInit) {
+		options.ctx = ctx
+	}
+}
+
 func WithOptionsLogz(logzOpts ...logz.Option) OptionInit {
 	return func(options *optionInit) {
 		options.logzOptions = logzOpts
@@ -30,7 +39,10 @@ func WithOptionsLogz(logzOpts ...logz.Option) OptionInit {
 }
 
 func optionInitRunner(options ...OptionInit) *optionInit {
-	option := &optionInit{}
+	option := &optionInit{
+		ctx: context.Background(),
+	}
+
 	for _, opt := range options {
 		opt(option)
 	}

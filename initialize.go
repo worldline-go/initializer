@@ -45,10 +45,10 @@ func SetExitCode(code int, override bool) {
 //
 // This function will initialize the logger and run the shutdown function on exit.
 func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit) {
-	opts := optionInitRunner(options...)
-	logz.InitializeLog(opts.logzOptions...)
+	opt := optionInitRunner(options...)
+	logz.InitializeLog(opt.logzOptions...)
 
-	log.Log().Msgf("starting %s", opts.msg)
+	log.Log().Msgf("starting %s", opt.msg)
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -64,7 +64,7 @@ func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit
 	}()
 
 	wg := sync.WaitGroup{}
-	ctx, ctxCancel := context.WithCancel(context.Background())
+	ctx, ctxCancel := context.WithCancel(opt.ctx)
 
 	Shutdown = ShutdownHolder{
 		ctxCancel: ctxCancel,
@@ -96,6 +96,6 @@ func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit
 	if err := fn(ctx, &wg); err != nil {
 		SetExitCode(1, false)
 
-		log.Error().Err(err).Msgf("failed to run service, closing: %s", opts.msg)
+		log.Error().Err(err).Msgf("failed to run service, closing: %s", opt.msg)
 	}
 }
