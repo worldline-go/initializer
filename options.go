@@ -40,7 +40,7 @@ func WithOptionsLogz(logzOpts ...logz.Option) OptionInit {
 	}
 }
 
-func WithSuppressInitLog(v bool) OptionInit {
+func WithInitLog(v bool) OptionInit {
 	return func(options *optionInit) {
 		options.initLog = v
 	}

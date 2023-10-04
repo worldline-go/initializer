@@ -22,6 +22,7 @@ func main() {
 	initializer.Init(
 		run,
 		initializer.WithMsgf("awesome-service version:[%s] commit:[%s] date:[%s]", version, commit, date),
+		// initializer.WithInitLog(false),
 		initializer.WithOptionsLogz(
 			logz.WithCaller(false),
 			logz.WithLevel(zerolog.LevelDebugValue),
