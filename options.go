@@ -12,6 +12,8 @@ type optionInit struct {
 	ctx context.Context //nolint:containedctx // temporary
 
 	logzOptions []logz.Option
+	// initLog is a flag that indicates if the init message should be logged.
+	initLog bool
 }
 
 type OptionInit func(options *optionInit)
@@ -38,9 +40,16 @@ func WithOptionsLogz(logzOpts ...logz.Option) OptionInit {
 	}
 }
 
+func WithSuppressInitLog(v bool) OptionInit {
+	return func(options *optionInit) {
+		options.initLog = v
+	}
+}
+
 func optionInitRunner(options ...OptionInit) *optionInit {
 	option := &optionInit{
-		ctx: context.Background(),
+		ctx:     context.Background(),
+		initLog: true,
 	}
 
 	for _, opt := range options {

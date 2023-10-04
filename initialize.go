@@ -48,7 +48,9 @@ func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit
 	opt := optionInitRunner(options...)
 	logz.InitializeLog(opt.logzOptions...)
 
-	log.Log().Msgf("starting %s", opt.msg)
+	if opt.initLog {
+		log.Log().Msgf("starting %s", opt.msg)
+	}
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -96,6 +98,6 @@ func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit
 	if err := fn(ctx, &wg); err != nil {
 		SetExitCode(1, false)
 
-		log.Error().Err(err).Msgf("failed to run service, closing: %s", opt.msg)
+		log.Error().Err(err).Msgf("service closing: %s", opt.msg)
 	}
 }
