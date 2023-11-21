@@ -61,7 +61,10 @@ func (s *ShutdownHolder) Run(options ...OptionShutdownRun) {
 		return
 	}
 
-	for _, inf := range s.funcs {
+	// run opposite order
+	for i := len(s.funcs) - 1; i >= 0; i-- {
+		inf := s.funcs[i]
+
 		if err := inf.fn(); err != nil {
 			log.Err(err).Str("name", inf.name).Msg("shutdown error")
 		}
