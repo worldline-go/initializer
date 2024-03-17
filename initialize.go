@@ -72,7 +72,13 @@ func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit
 		ctxCancel: ctxCancel,
 	}
 
-	defer wg.Wait()
+	defer func() {
+		if opt.wgWaitTimeout > 0 {
+			newTimeout(opt.wgWaitTimeout).wait(&wg)
+		} else {
+			wg.Wait()
+		}
+	}()
 	defer ctxCancel()
 
 	signalChan := make(chan os.Signal, 1)

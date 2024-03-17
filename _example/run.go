@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/rs/zerolog"
 
@@ -18,10 +19,11 @@ var (
 )
 
 func main() {
-	// Run the application.
+	// run the application
 	initializer.Init(
 		run,
 		initializer.WithMsgf("awesome-service version:[%s] commit:[%s] date:[%s]", version, commit, date),
+		initializer.WithWaitTimeout(5*time.Second),
 		// initializer.WithInitLog(false),
 		initializer.WithOptionsLogz(
 			logz.WithCaller(false),
@@ -29,9 +31,15 @@ func main() {
 		))
 }
 
-func run(ctx context.Context, _ *sync.WaitGroup) error {
-	// Do something here.
+func run(ctx context.Context, wg *sync.WaitGroup) error {
 	<-ctx.Done()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		// above than WithWaitTimeout
+		time.Sleep(10 * time.Second)
+	}()
 
 	return fmt.Errorf("something went wrong")
 }

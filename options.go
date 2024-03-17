@@ -3,6 +3,7 @@ package initializer
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/worldline-go/logz"
 )
@@ -14,6 +15,8 @@ type optionInit struct {
 	logzOptions []logz.Option
 	// initLog is a flag that indicates if the init message should be logged.
 	initLog bool
+
+	wgWaitTimeout time.Duration
 }
 
 type OptionInit func(options *optionInit)
@@ -43,6 +46,12 @@ func WithOptionsLogz(logzOpts ...logz.Option) OptionInit {
 func WithInitLog(v bool) OptionInit {
 	return func(options *optionInit) {
 		options.initLog = v
+	}
+}
+
+func WithWaitTimeout(duration time.Duration) OptionInit {
+	return func(options *optionInit) {
+		options.wgWaitTimeout = duration
 	}
 }
 
