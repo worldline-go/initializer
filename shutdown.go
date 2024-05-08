@@ -2,6 +2,7 @@ package initializer
 
 import (
 	"context"
+	"log/slog"
 	"sync"
 
 	"github.com/rs/zerolog/log"
@@ -66,7 +67,14 @@ func (s *ShutdownHolder) Run(options ...OptionShutdownRun) {
 		inf := s.funcs[i]
 
 		if err := inf.fn(); err != nil {
-			log.Err(err).Str("name", inf.name).Msg("shutdown error")
+			logFn(DefaultLogger, map[logger]func(){
+				Zerolog: func() {
+					log.Err(err).Str("name", inf.name).Msg("shutdown error")
+				},
+				Slog: func() {
+					slog.Error("shutdown error", slog.String("name", inf.name), slog.String("error", err.Error()))
+				},
+			})
 		}
 	}
 

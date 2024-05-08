@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/rakunlabs/logi"
 	"github.com/rs/zerolog"
 
 	"github.com/worldline-go/initializer"
@@ -28,7 +29,13 @@ func main() {
 		initializer.WithOptionsLogz(
 			logz.WithCaller(false),
 			logz.WithLevel(zerolog.LevelDebugValue),
-		))
+		),
+		initializer.WithOptionsLogi(
+			logi.WithCaller(false),
+			logi.WithLevel(zerolog.LevelDebugValue),
+		),
+		initializer.WithDefaultLogger(initializer.Slog),
+	)
 }
 
 func run(ctx context.Context, wg *sync.WaitGroup) error {

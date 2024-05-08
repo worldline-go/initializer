@@ -5,7 +5,15 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rakunlabs/logi"
 	"github.com/worldline-go/logz"
+)
+
+type logger uint8
+
+const (
+	Zerolog logger = iota
+	Slog
 )
 
 type optionInit struct {
@@ -13,8 +21,11 @@ type optionInit struct {
 	ctx context.Context //nolint:containedctx // temporary
 
 	logzOptions []logz.Option
+	logiOptions []logi.Option
 	// initLog is a flag that indicates if the init message should be logged.
 	initLog bool
+
+	logger logger
 
 	wgWaitTimeout time.Duration
 }
@@ -43,6 +54,18 @@ func WithOptionsLogz(logzOpts ...logz.Option) OptionInit {
 	}
 }
 
+func WithOptionsLogi(logiOpts ...logi.Option) OptionInit {
+	return func(options *optionInit) {
+		options.logiOptions = logiOpts
+	}
+}
+
+func WithDefaultLogger(l logger) OptionInit {
+	return func(options *optionInit) {
+		options.logger = l
+	}
+}
+
 func WithInitLog(v bool) OptionInit {
 	return func(options *optionInit) {
 		options.initLog = v
@@ -58,6 +81,7 @@ func WithWaitTimeout(duration time.Duration) OptionInit {
 func optionInitRunner(options ...OptionInit) *optionInit {
 	option := &optionInit{
 		ctx:     context.Background(),
+		logger:  DefaultLogger,
 		initLog: true,
 	}
 

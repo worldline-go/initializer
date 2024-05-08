@@ -1,6 +1,7 @@
 package initializer
 
 import (
+	"log/slog"
 	"sync"
 	"time"
 
@@ -37,7 +38,14 @@ func (t *timeout) wait(wg *sync.WaitGroup) {
 		}()
 
 		<-timerWait.C
-		log.Warn().Msg("timeout reached while waiting WaitGroup")
+		logFn(DefaultLogger, map[logger]func(){
+			Zerolog: func() {
+				log.Warn().Msg("timeout reached while waiting WaitGroup")
+			},
+			Slog: func() {
+				slog.Warn("timeout reached while waiting WaitGroup")
+			},
+		})
 	}()
 
 	go func() {

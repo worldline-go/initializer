@@ -2,17 +2,21 @@ package initializer
 
 import (
 	"context"
+	"log/slog"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
+	"time"
 
+	"github.com/rakunlabs/logi"
 	"github.com/rs/zerolog/log"
 	"github.com/worldline-go/logz"
 )
 
 var (
 	DefaultExitCode = 0
+	DefaultLogger   = Zerolog
 
 	exitCode = exitCodeHolder{}
 	mutext   = sync.Mutex{}
@@ -46,10 +50,24 @@ func SetExitCode(code int, override bool) {
 // This function will initialize the logger and run the shutdown function on exit.
 func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit) {
 	opt := optionInitRunner(options...)
+	DefaultLogger = opt.logger
+
 	logz.InitializeLog(opt.logzOptions...)
+	logi.InitializeLog(opt.logiOptions...)
 
 	if opt.initLog {
-		log.Log().Msgf("starting %s", opt.msg)
+		logFn(opt.logger, map[logger]func(){
+			Zerolog: func() {
+				log.Log().Msg("starting " + opt.msg)
+			},
+			Slog: func() {
+				// without level check
+				_ = slog.Default().Handler().Handle(context.Background(), slog.Record{
+					Time:    time.Now(),
+					Message: "starting " + opt.msg,
+				})
+			},
+		})
 	}
 
 	defer func() {
@@ -93,7 +111,14 @@ func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit
 		case <-signalChan:
 			SetExitCode(1, false)
 
-			log.Warn().Msg("received shutdown signal")
+			logFn(opt.logger, map[logger]func(){
+				Zerolog: func() {
+					log.Warn().Msg("received shutdown signal")
+				},
+				Slog: func() {
+					slog.Warn("received shutdown signal")
+				},
+			})
 
 			ctxCancel()
 		}
@@ -104,6 +129,13 @@ func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit
 	if err := fn(ctx, &wg); err != nil {
 		SetExitCode(1, false)
 
-		log.Error().Err(err).Msgf("service closing: %s", opt.msg)
+		logFn(opt.logger, map[logger]func(){
+			Zerolog: func() {
+				log.Error().Err(err).Msgf("service closing: %s", opt.msg)
+			},
+			Slog: func() {
+				slog.Error("service closing: "+opt.msg, slog.String("error", err.Error()))
+			},
+		})
 	}
 }
