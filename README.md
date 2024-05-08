@@ -8,7 +8,7 @@ go get github.com/worldline-go/initializer
 
 ## Usage
 
-Default logger is __zerolog__, use `initializer.WithDefaultLogger(initializer.Slog)` to use standard log.
+Default logger is __zerolog__, use `initializer.WithLogger(initializer.Slog)` to use standard log.
 
 ```go
 var (

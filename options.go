@@ -60,7 +60,7 @@ func WithOptionsLogi(logiOpts ...logi.Option) OptionInit {
 	}
 }
 
-func WithDefaultLogger(l logger) OptionInit {
+func WithLogger(l logger) OptionInit {
 	return func(options *optionInit) {
 		options.logger = l
 	}
