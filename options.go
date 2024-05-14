@@ -80,9 +80,10 @@ func WithWaitTimeout(duration time.Duration) OptionInit {
 
 func optionInitRunner(options ...OptionInit) *optionInit {
 	option := &optionInit{
-		ctx:     context.Background(),
-		logger:  DefaultLogger,
-		initLog: true,
+		ctx:           context.Background(),
+		logger:        DefaultLogger,
+		initLog:       true,
+		wgWaitTimeout: DefaultWgTimeout,
 	}
 
 	for _, opt := range options {

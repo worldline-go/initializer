@@ -9,8 +9,8 @@ github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
-github.com/rakunlabs/logi v0.1.0 h1:Kl1Rt1I7P+o1lt7MazS9lkk0ueQWu4OZvMlipHZDQbs=
-github.com/rakunlabs/logi v0.1.0/go.mod h1:LLnCp/aiBxqJYrArP8j8dotuwwPNHnj6lIY/WsgRauo=
+github.com/rakunlabs/logi v0.2.1 h1:3QOSEiB6jhvOyVTZICR+X1/JMsO4xOEZtleLBvC64FA=
+github.com/rakunlabs/logi v0.2.1/go.mod h1:LLnCp/aiBxqJYrArP8j8dotuwwPNHnj6lIY/WsgRauo=
 github.com/rs/xid v1.5.0/go.mod h1:trrq9SKmegXys3aeAKXMUTdJsYXVwGY3RLcfgqegfbg=
 github.com/rs/zerolog v1.32.0 h1:keLypqrlIjaFsbmJOBdB/qvyF8KEtCWHwobLp5l/mQ0=
 github.com/rs/zerolog v1.32.0/go.mod h1:/7mN4D5sKwJLZQ2b/znpjC3/GQWY/xaDXUM0kKWRHss=

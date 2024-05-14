@@ -31,7 +31,7 @@ func main() {
 			logz.WithLevel(zerolog.LevelDebugValue),
 		),
 		initializer.WithOptionsLogi(
-			logi.WithCaller(false),
+			logi.WithCaller(true),
 			logi.WithLevel(zerolog.LevelDebugValue),
 		),
 		initializer.WithLogger(initializer.Slog),

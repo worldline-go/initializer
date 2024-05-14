@@ -15,8 +15,9 @@ import (
 )
 
 var (
-	DefaultExitCode = 0
-	DefaultLogger   = Zerolog
+	DefaultExitCode  = 0
+	DefaultLogger    = Zerolog
+	DefaultWgTimeout = 2 * time.Minute
 
 	exitCode = exitCodeHolder{}
 	mutext   = sync.Mutex{}
@@ -62,10 +63,7 @@ func Init(fn func(context.Context, *sync.WaitGroup) error, options ...OptionInit
 			},
 			Slog: func() {
 				// without level check
-				_ = slog.Default().Handler().Handle(context.Background(), slog.Record{
-					Time:    time.Now(),
-					Message: "starting " + opt.msg,
-				})
+				logi.Log("starting " + opt.msg)
 			},
 		})
 	}

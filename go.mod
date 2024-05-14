@@ -3,7 +3,7 @@ module github.com/worldline-go/initializer
 go 1.22
 
 require (
-	github.com/rakunlabs/logi v0.1.0
+	github.com/rakunlabs/logi v0.2.1
 	github.com/rs/zerolog v1.32.0
 	github.com/worldline-go/logz v0.5.0
 )
