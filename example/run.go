@@ -7,6 +7,7 @@ import (
 
 	"github.com/rakunlabs/into"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 
 	"github.com/worldline-go/initializer"
 	"github.com/worldline-go/logz"
@@ -24,7 +25,7 @@ func main() {
 		run,
 		initializer.WithMsgf("awesome-service version:[%s] commit:[%s] date:[%s]", version, commit, date),
 		initializer.WithOptionsLogz(
-			logz.WithCaller(false),
+			// logz.WithCaller(false),
 			logz.WithLevel(zerolog.LevelDebugValue),
 		),
 		initializer.WithOptionsInto(
@@ -34,6 +35,7 @@ func main() {
 }
 
 func run(ctx context.Context) error {
+	log.Warn().Msg("this is a warning message")
 	<-ctx.Done()
 
 	wg := initializer.WaitGroup(ctx)

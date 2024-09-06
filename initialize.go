@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/rakunlabs/into"
-	"github.com/rs/zerolog/log"
 	"github.com/worldline-go/logz"
 )
 
@@ -14,11 +13,17 @@ import (
 func Init(fn func(context.Context) error, options ...Option) {
 	opt := optionInitRunner(options...)
 
-	logz.InitializeLog(opt.logzOptions...)
+	logzOpt := logz.ReadOptions(opt.logzOptions...)
+	logz.InitializeLog(logz.WithOption(logzOpt))
+
+	logzOpt.Caller = new(bool)
+	logzLogger := logz.Logger(logz.WithOption(logzOpt))
 
 	optionsInto := []into.Option{
 		into.WithMsgf(opt.msg),
-		into.WithLogger(logz.AdapterKV{Log: log.Logger}),
+		into.WithLogger(logz.AdapterKV{
+			Log: logzLogger,
+		}),
 	}
 	optionsInto = append(optionsInto, opt.intoOptions...)
 
