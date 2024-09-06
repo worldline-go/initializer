@@ -1,90 +1,44 @@
 package initializer
 
 import (
-	"context"
 	"fmt"
-	"time"
 
-	"github.com/rakunlabs/logi"
+	"github.com/rakunlabs/into"
 	"github.com/worldline-go/logz"
 )
 
-type logger uint8
-
-const (
-	Zerolog logger = iota
-	Slog
-)
-
-type optionInit struct {
+type option struct {
 	msg string
-	ctx context.Context //nolint:containedctx // temporary
 
 	logzOptions []logz.Option
-	logiOptions []logi.Option
-	// initLog is a flag that indicates if the init message should be logged.
-	initLog bool
-
-	logger logger
-
-	wgWaitTimeout time.Duration
+	intoOptions []into.Option
 }
 
-type OptionInit func(options *optionInit)
+type Option func(options *option)
 
 // WithMsg is a function that sets the message to be logged when the application starts.
 //
 // This will override the default message.
-func WithMsgf(format string, a ...any) OptionInit {
-	return func(options *optionInit) {
+func WithMsgf(format string, a ...any) Option {
+	return func(options *option) {
 		options.msg = fmt.Sprintf(format, a...)
 	}
 }
 
-// WithContext is a function that sets the context to be used as parent context.
-func WithContext(ctx context.Context) OptionInit {
-	return func(options *optionInit) {
-		options.ctx = ctx
-	}
-}
-
-func WithOptionsLogz(logzOpts ...logz.Option) OptionInit {
-	return func(options *optionInit) {
+func WithOptionsLogz(logzOpts ...logz.Option) Option {
+	return func(options *option) {
 		options.logzOptions = logzOpts
 	}
 }
 
-func WithOptionsLogi(logiOpts ...logi.Option) OptionInit {
-	return func(options *optionInit) {
-		options.logiOptions = logiOpts
+func WithOptionsInto(intoOpts ...into.Option) Option {
+	return func(options *option) {
+		options.intoOptions = intoOpts
 	}
 }
 
-func WithLogger(l logger) OptionInit {
-	return func(options *optionInit) {
-		options.logger = l
-	}
-}
-
-func WithInitLog(v bool) OptionInit {
-	return func(options *optionInit) {
-		options.initLog = v
-	}
-}
-
-func WithWaitTimeout(duration time.Duration) OptionInit {
-	return func(options *optionInit) {
-		options.wgWaitTimeout = duration
-	}
-}
-
-func optionInitRunner(options ...OptionInit) *optionInit {
-	option := &optionInit{
-		ctx:           context.Background(),
-		logger:        DefaultLogger,
-		initLog:       true,
-		wgWaitTimeout: DefaultWgTimeout,
-	}
+func optionInitRunner(options ...Option) *option {
+	option := &option{}
 
 	for _, opt := range options {
 		opt(option)

@@ -6,9 +6,11 @@ Initializer is a simple library to initialize main go service.
 go get github.com/worldline-go/initializer
 ```
 
+> This library customized to use https://github.com/rakunlabs/into
+
 ## Usage
 
-Default logger is __zerolog__, use `initializer.WithLogger(initializer.Slog)` to use standard log.
+Default logger is __zerolog__
 
 ```go
 var (
@@ -30,11 +32,10 @@ func main() {
 		))
 }
 
-func run(_ context.Context, _ *sync.WaitGroup) error {
+func run(_ context.Context) error {
 	// Do something here.
 	log.Info().Msg("Hello World!")
 
 	return fmt.Errorf("something went wrong")
 }
 ```
-

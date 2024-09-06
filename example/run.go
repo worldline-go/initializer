@@ -3,10 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"sync"
 	"time"
 
-	"github.com/rakunlabs/logi"
+	"github.com/rakunlabs/into"
 	"github.com/rs/zerolog"
 
 	"github.com/worldline-go/initializer"
@@ -24,28 +23,26 @@ func main() {
 	initializer.Init(
 		run,
 		initializer.WithMsgf("awesome-service version:[%s] commit:[%s] date:[%s]", version, commit, date),
-		initializer.WithWaitTimeout(5*time.Second),
-		// initializer.WithInitLog(false),
 		initializer.WithOptionsLogz(
 			logz.WithCaller(false),
 			logz.WithLevel(zerolog.LevelDebugValue),
 		),
-		initializer.WithOptionsLogi(
-			logi.WithCaller(true),
-			logi.WithLevel(zerolog.LevelDebugValue),
+		initializer.WithOptionsInto(
+			into.WithWaitTimeout(5*time.Second),
 		),
-		initializer.WithLogger(initializer.Slog),
 	)
 }
 
-func run(ctx context.Context, wg *sync.WaitGroup) error {
+func run(ctx context.Context) error {
 	<-ctx.Done()
+
+	wg := initializer.WaitGroup(ctx)
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		// above than WithWaitTimeout
-		time.Sleep(10 * time.Second)
+		time.Sleep(3 * time.Second)
 	}()
 
 	return fmt.Errorf("something went wrong")
