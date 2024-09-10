@@ -38,3 +38,9 @@ func run(_ context.Context) error {
 	return fmt.Errorf("something went wrong")
 }
 ```
+
+Add shutdown function, it will be called when the context is done.
+
+```go
+initializer.ShutdownAdd(server.Close, "server")
+```
