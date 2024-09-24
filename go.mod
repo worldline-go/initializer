@@ -1,9 +1,9 @@
 module github.com/worldline-go/initializer
 
-go 1.23
+go 1.18
 
 require (
-	github.com/rakunlabs/into v0.3.3
+	github.com/rakunlabs/into v0.4.0
 	github.com/rs/zerolog v1.33.0
 	github.com/worldline-go/logz v0.5.1
 )
