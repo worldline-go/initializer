@@ -24,6 +24,12 @@ func Init(fn func(context.Context) error, options ...Option) {
 		into.WithLogger(logz.AdapterKV{
 			Log: logzLogger,
 		}),
+		into.WithStartFn(func() {
+			logzLogger.Log().Msg("starting " + opt.msg)
+		}),
+		into.WithStopFn(func() {
+			logzLogger.Log().Msg("closing " + opt.msg)
+		}),
 	}
 	optionsInto = append(optionsInto, opt.intoOptions...)
 
